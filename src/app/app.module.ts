@@ -7,6 +7,9 @@ import { LoginComponent } from './components/login/login.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { TaskFormComponent } from './components/task-form/task-form.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { TaskServicesService } from './services/task-services.service';
+import { TaskService } from './services/task.service';
+import { AuthService } from './services/auth.service';
 
 
 @NgModule({
@@ -20,7 +23,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [TaskService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,18 +2,14 @@
 <div class="d-flex flex-column align-items-stretch">
   <div id=" p-2 accordion">
 
-    <div class="card mb-1">
+    <div class="card mb-1" *ngFor="let task of taskList">
 
-      <div class="card-header d-flex flex-column" id="headingOne">
+      <div class="card-header d-flex flex-column" id="heading-{{task.id}}">
         
         <div class="d-flex flex-row mb-1">
-          <h5 class="mb-0 mr-auto">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-              Collapsible Group Item #1
-            </button>
-          </h5>
-          <div class="btn-group ml-auto" role="group" aria-label="Second group">
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse" data-target="#collapseOne">
+          <h5 class="mb-0 mr-auto">{{task.taskName}}</h5>
+          <div class="btn-group ml-auto p1" role="group" aria-label="group">
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse" [attr.data-target]="'#collapse-' + task.id">
                 <i class="fa fa-chevron-up"></i>
               </button>
               <button type="button" class="btn btn-sm btn-primary">
@@ -23,16 +19,15 @@
           </div>
         </div>
 
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 80%"
-                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">80% complete</div>
+        <div class="progress" *ngIf="task.percentage > 0">
+            <div  class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="task.percentage"
+             aria-valuemin="0" aria-valuemax="100">{{task.percentage}}% complete</div>
         </div>
       </div>
 
-      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <div id="collapse-{{task.id}}" class="collapse" aria-labelledby="heading" data-parent="#accordion">
         <div class="card-body">
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-          3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt 
+         {{task.desc}}
         </div>
       </div>
 
@@ -40,7 +35,7 @@
 
   </div>
 
-  <div>
+  <div class="">
     <nav aria-label="Page navigation">
       <ul class="pagination pagination-sm justify-content-center mt-1">
         <li class="page-item disabled">
