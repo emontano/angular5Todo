@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {NgxPaginationModule} from 'ngx-pagination';
 import { TaskService } from '../../services/task.service';
+import { MessagesService } from '../../services/messages.service';
 import { Task } from '../../models/Task';
 
 @Component({
@@ -9,12 +11,14 @@ import { Task } from '../../models/Task';
 })
 export class TasksComponent implements OnInit {
 
-  taskList: Task[];
+  taskList: any;
 
-  constructor(private taskService: TaskService) { }
+  constructor(private taskService: TaskService,private msgService: MessagesService) { }
 
   ngOnInit() {
-    this.taskList = this.taskService.getTaskList();
+    this.taskList = this.taskService.getTaskInProgress().subscribe(tasks =>{
+      this.taskList = tasks;
+    });
   }
 
 }

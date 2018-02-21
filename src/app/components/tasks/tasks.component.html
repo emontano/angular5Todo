@@ -1,55 +1,34 @@
 
-<div class="d-flex flex-column align-items-stretch">
-  <div id=" p-2 accordion">
+<div id=" p-2 accordion" *ngIf="taskList !=null">
+    <div class="card mb-1" *ngFor="let task of taskList | paginate: { itemsPerPage: 8, currentPage: p }">
 
-    <div class="card mb-1" *ngFor="let task of taskList">
+        <div class="card-header d-flex flex-column px-2 py-2" id="heading-{{task.id}}">
+            <div class="d-flex flex-row mb-1">
+              <h5 class="mb-0 mr-auto">{{task.name}}</h5>
+              <div class="btn-group ml-auto p1" role="group" aria-label="group">
+                <button type="button" class="btn btn-sm btn-light mr-3" data-toggle="collapse" 
+                    [attr.data-target]="'#collapse-'+task.id" (click)="task.collapse=!task.collapse"> 
+                    <i *ngIf="task.collapse" class="fa fa-chevron-down"></i> <i *ngIf="!task.collapse" class="fa fa-chevron-up"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary mr-1 px-1 py-1"><i class="fa fa-check-square"></i></button>
+                  <button type="button" class="btn btn-sm btn-outline-primary mr-1 px-1 py-1"><i class="fa fa-edit"></i></button>
+                  <button type="button" class="btn btn-sm btn-outline-danger px-1 py-1"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
 
-      <div class="card-header d-flex flex-column" id="heading-{{task.id}}">
+            <div class="progress" *ngIf="task.progress > 0">
+                <div  class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="task.progress"
+                aria-valuemin="0" aria-valuemax="100">{{task.progress}}% complete</div>
+            </div>
+        </div>
+
+        <div id="collapse-{{task.id}}" class="collapse" aria-labelledby="heading" data-parent="#accordion">
+          <div class="card-body px-2 pt-1">{{task.desc}}</div>
+        </div>
         
-        <div class="d-flex flex-row mb-1">
-          <h5 class="mb-0 mr-auto">{{task.taskName}}</h5>
-          <div class="btn-group ml-auto p1" role="group" aria-label="group">
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse" [attr.data-target]="'#collapse-' + task.id">
-                <i class="fa fa-chevron-up"></i>
-              </button>
-              <button type="button" class="btn btn-sm btn-primary">
-                <i class="fa fa-chevron-down"></i></button>
-              <button type="button" class="btn btn-sm btn-danger">
-                <i class="fa fa-trash"></i></button>
-          </div>
-        </div>
-
-        <div class="progress" *ngIf="task.percentage > 0">
-            <div  class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="task.percentage"
-             aria-valuemin="0" aria-valuemax="100">{{task.percentage}}% complete</div>
-        </div>
-      </div>
-
-      <div id="collapse-{{task.id}}" class="collapse" aria-labelledby="heading" data-parent="#accordion">
-        <div class="card-body">
-         {{task.desc}}
-        </div>
-      </div>
-
     </div>
-
-  </div>
-
-  <div class="">
-    <nav aria-label="Page navigation">
-      <ul class="pagination pagination-sm justify-content-center mt-1">
-        <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-
+</div>
+<div class="fixed-bottom">
+    <pagination-controls (pageChange)="p = $event" autoHide="true"></pagination-controls>
 </div>
  

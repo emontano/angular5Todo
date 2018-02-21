@@ -1,9 +1,11 @@
 export interface Task{
-    id:string;
-    taskName:string;
+    id?:string;
+    name?:string;
     cat?:string;
     desc?:string;
-    percentage:number;
+    progress?:number;
     created_at?:Date;
-    completed:boolean;
+    completed?:boolean;
+    completed_at?:Date;
+    collapse?:boolean;
 }

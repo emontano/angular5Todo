@@ -8,6 +8,7 @@ import { User} from '../../models/User';
 })
 export class NavbarComponent implements OnInit {
 
+  
   loggedInUser:User = {name:'Monty', email:'', password:null};
   isLoggedIn: boolean = true;
   
