@@ -1,42 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../models/Task';
-import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument } from 'angularfire2/firestore';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
-
-
+import { Task } from '../models/Task';
 
 @Injectable()
 export class TaskService {
-  private taskCollection: AngularFirestoreCollection<Task>;
-  private taskDoc: AngularFirestoreDocument<Task>
+  private inProgressTaskCollection: AngularFirestoreCollection<Task>;
+  private completedTaskCollection: AngularFirestoreCollection<Task>;
+  private taskDoc: AngularFirestoreDocument<Task>;
   private tasksInProgress: Observable<Task[]>;
   private tasksCompleted: Observable<Task[]>;
-  private task:Observable<Task>;
-  
-  list= [
-  {id:'111',name:'Poner tejas en el cubo',cat:'house',desc:'Comprar las tejas y maderas para hacer el tejado del cubo',
-  progress:0,completed:false,collapse:true},
-  {id:'222',name:'Hacer escalera para cubo',cat:'house',desc:'Hacer una escalera de madera para el cubo',
-  progress:0,completed:false,collapse:true},
-  {id:'333',name:'Ordenar bastidor puerta',cat:'house',desc:'Mandar hacer el cuadro para la puerta del cubo',
-  progress:0,completed:false,collapse:true},
-  {id:'444',name:'Poner smart lock',cat:'smart',desc:'Mandar hacer modificaciones para el smart lock',
-  progress:0,completed:false,collapse:true},
-  {id:'555',name:'Hacer Todo List',cat:'Programming',desc:'Terminar la applicacion de todo list',
-  progress:30,completed:false,collapse:true},
-  {id:'666',name:'Iniciar aws certification',cat:'Programming',desc:'Reiniciar a estudiar para el examen de certificacion de aws associate architec',
-  progress:50,completed:false,collapse:true},
-  ];
+  private task: Observable<Task>;
 
-  constructor(private afs: AngularFirestore) {
-    this.taskCollection = this.afs.collection('tasks', ref => ref.orderBy('name', 'asc'));
+  postUrl = 'https://us-central1-todolist-416b2.cloudfunctions.net/todoHelloWorld';
+
+  constructor(private afs: AngularFirestore, private http: HttpClient) {
+    // Collection of task in progress
+    this.inProgressTaskCollection = this.afs.collection('tasks', ref =>
+      ref.where('completed', '==', false).orderBy('cat', 'asc').orderBy('name', 'asc') );
+    // Collection of completed tasks
+    this.completedTaskCollection = this.afs.collection('tasks', ref => ref.where('completed', '==', true));
+    console.log('HttpService call: ' + this.getFunction());
    }
 
-  //Get list of task in progress
-  getTaskInProgress() :Observable<Task[]> {
-    //Get task with id
-    this.tasksInProgress = this.taskCollection.snapshotChanges().map(changes => {
-       return changes.map(action =>{ 
+   getFunction(): Observable<any> {
+      return this.http.get<any> (this.postUrl);
+   }
+
+
+  // Get list of tasks in progress
+  getTasksInProgress(): Observable<Task[]> {
+    // Get task with id
+    this.tasksInProgress = this.inProgressTaskCollection.snapshotChanges().map(changes => {
+       return changes.map(action => {
          const data = action.payload.doc.data() as Task;
          data.id = action.payload.doc.id;
          return data;
@@ -45,42 +42,54 @@ export class TaskService {
      return this.tasksInProgress;
   }
 
+  // Get list of tasks completed
+  getTasksCompleted(): Observable<Task[]> {
+    // Get task without id
+    this.tasksCompleted = this.completedTaskCollection.snapshotChanges().map(changes => {
+      return changes.map(action => {
+          const data = action.payload.doc.data() as Task;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      });
+    return this.tasksCompleted;
+  }
 
-  //Add a new task
+
+  // Add a new task
   newTask(task: Task) {
     task.progress = 0;
     task.created_at = new Date();
     task.completed = false;
     task.collapse = false;
-    this.taskCollection.add(task);
+    this.inProgressTaskCollection.add(task);
   }
 
-  /*Get a client base on id
-  getClient(id:string):Observable<Client>{
-     this.clientDoc = this.afs.doc<Client>(`clients/${id}`);
-     this.client = this.clientDoc.snapshotChanges().map(action => {
-       if(action.payload.exists === false){
+  // Get a Task base on id
+  getTask(id: string): Observable<Task> {
+     this.taskDoc = this.afs.doc<Task>(`tasks/${id}`);
+     this.task = this.taskDoc.snapshotChanges().map(action => {
+       if (action.payload.exists === false) {
          return null;
-         }
-       else{
-         const data = action.payload.data() as Client;
+         } else {
+         const data = action.payload.data() as Task;
          data.id = action.payload.id;
          return data;
        }
-     }); 
-     return this.client;
-  }*/
+     });
+     return this.task;
+  }
 
-  //Update a Task
-  updateTask(task:Task){
-    console.log("Task to update: "+task.id);
+  // Update a Task
+  updateTask(task: Task) {
+    console.log('Task to update: ' + task.id);
     this.taskDoc = this.afs.doc<Task>(`tasks/${task.id}`);
     this.taskDoc.update(task);
    }
 
-   //Delete Task
-   deleteTask( task:Task){
-     console.log("Task to delete: "+task);
+   // Delete Task
+   deleteTask( task: Task) {
+     console.log('Task to delete: ' + task);
      this.taskDoc = this.afs.doc<Task>(`tasks/${task.id}`);
      this.taskDoc.delete();
    }

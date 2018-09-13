@@ -1,24 +1,40 @@
 
-<div id=" p-2 accordion" *ngIf="taskList !=null">
-    <div class="card mb-1" *ngFor="let task of taskList | paginate: { itemsPerPage: 8, currentPage: p }">
+<div id=" p-2 accordion">
+    <div class="card mb-1" *ngFor="let task of taskList | paginate: { itemsPerPage: 7, currentPage: p }">
 
         <div class="card-header d-flex flex-column px-2 py-2" id="heading-{{task.id}}">
             <div class="d-flex flex-row mb-1">
-              <h5 class="mb-0 mr-auto">{{task.name}}</h5>
-              <div class="btn-group ml-auto p1" role="group" aria-label="group">
-                <button type="button" class="btn btn-sm btn-light mr-3" data-toggle="collapse" 
-                    [attr.data-target]="'#collapse-'+task.id" (click)="task.collapse=!task.collapse"> 
-                    <i *ngIf="task.collapse" class="fa fa-chevron-down"></i> <i *ngIf="!task.collapse" class="fa fa-chevron-up"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-primary mr-1 px-1 py-1"><i class="fa fa-check-square"></i></button>
-                  <button type="button" class="btn btn-sm btn-outline-primary mr-1 px-1 py-1"><i class="fa fa-edit"></i></button>
-                  <button type="button" class="btn btn-sm btn-outline-danger px-1 py-1"><i class="fa fa-trash"></i></button>
-              </div>
+                <div class="container px-0">
+                    <span class="text-white rounded px-1" [style.background-color]="task.color">
+                        {{task.cat}}</span>
+                    <span>{{task.name}}</span>
+                </div>
+              
+                <div class="btn-group ml-auto p1" role="group" aria-label="group">
+                    <button type="button" class="btn btn-sm btn-light mr-2 pl-0" data-toggle="collapse" 
+                        [attr.data-target]="'#collapse-'+task.id" (click)="task.collapse=!task.collapse"> 
+                        <i *ngIf="task.collapse" class="fa fa-chevron-down"></i> 
+                        <i *ngIf="!task.collapse" class="fa fa-chevron-up"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary mr-1 px-1 py-1" (click)="onCompleteClick(task.id)">
+                        <i class="fa fa-check-square"></i>
+                    </button>
+                    <a routerLink="task/edit/{{task.id}}" class="btn btn-sm btn-outline-primary mr-1 px-1 py-1"
+                        data-toggle="tooltip" data-placement="left" title="Update task">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-danger px-1 py-1" (click)="onDeleteClick(task.id)"
+                        data-toggle="tooltip" data-placement="left" title="Delete task">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
             </div>
 
-            <div class="progress" *ngIf="task.progress > 0">
-                <div  class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="task.progress"
-                aria-valuemin="0" aria-valuemax="100">{{task.progress}}% complete</div>
+            <div class="progress pbar" *ngIf="task.progress> 0">
+                <div  class="progress-bar progress-bar-striped progress-bar-animated bg-success pbar" 
+                    role="progressbar" [style.width.%]="task.progress"
+                    aria-valuemin="0" aria-valuemax="100">{{task.progress}}% 
+                </div>
             </div>
         </div>
 
@@ -29,6 +45,6 @@
     </div>
 </div>
 <div class="fixed-bottom">
-    <pagination-controls (pageChange)="p = $event" autoHide="true"></pagination-controls>
+    <pagination-controls (pageChange)="p = $event" autoHide="true" ></pagination-controls>
 </div>
  

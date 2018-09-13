@@ -6,17 +6,18 @@ import { NavbarComponent } from '../app/components/navbar/navbar.component';
 import { DashboardComponent } from '../app/components/dashboard/dashboard.component';
 import { LoginComponent } from '../app/components/login/login.component';
 import { TasksComponent } from './components/tasks/tasks.component';
-import { TaskFormComponent } from '../app/components/task-form/task-form.component';
+import { NewTaskComponent } from '../app/components/new-task/new-task.component';
 import { EditTaskComponent } from '../app/components/edit-task/edit-task.component';
 import { CompletedTasksComponent } from '../app/components/completed-tasks/completed-tasks.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AuthGuard } from './guards/auth.guards';
 
 const routes:Routes =[
-{ path: '', component: DashboardComponent },
+{ path: '', component: DashboardComponent ,canActivate:[AuthGuard]},
 { path: 'login', component: LoginComponent },
-{ path: 'new-task', component: TaskFormComponent },
-{ path: 'task/edit/:id', component: EditTaskComponent },
-{ path: 'completed-tasks', component: CompletedTasksComponent },
+{ path: 'new-task', component: NewTaskComponent,canActivate:[AuthGuard] },
+{ path: 'task/edit/:id', component: EditTaskComponent,canActivate:[AuthGuard] },
+{ path: 'completed-tasks', component: CompletedTasksComponent,canActivate:[AuthGuard] },
 { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -25,6 +26,6 @@ const routes:Routes =[
   imports: [
     RouterModule.forRoot(routes)
   ],
-  declarations: []
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }
