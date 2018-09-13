@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-6 pt-0">
+      <a routerLink="/" href="" class="btn btn-link pt-0">
+        <i class="fa fa-arrow-circle-o-left"></i> Back to Dashboard
+      </a>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+  
+
+<div class="card">
+  <div class="card-header px-3 py-2"><strong>Add New Task</strong></div>
+
+  <div class="card-body" >
+      <form novalidate #taskForm="ngForm" (ngSubmit)="onSubmit(taskForm)">
+        <div class="form-group">
+          <input type="text" class="form-control form-control-sm" name="name" #name="ngModel" placeholder="Task name" 
+            [(ngModel)]="task.name" minlength="4" required
+            [ngClass]="{'is-invalid':name.errors?.required && name.touched || name.errors?.minlength && name.touched}">
+          <div *ngIf="name.errors?.required && name.touched" class="invalid-feedback">Task Name is required</div>
+          <div *ngIf="name.errors?.minlength && name.touched" class="invalid-feedback">Must be at least 4 characters</div>        
+        </div>
+
+        <div class="form-group mt-1">
+            <label for="cat" class="py-1 mb-0">Category</label> 
+            <select class="form-control form-control-sm rounded" #cat="ngModel" name="cat" 
+                [(ngModel)]="task.cat" required 
+                [ngClass]="{'is-invalid':cat.errors?.required && cat.touched}" >
+                <option  class="py-1 text-white" *ngFor="let ctg of catList" [style.background-color]="ctg.color" value="{{ctg.cat_name}}">
+                  {{ctg.cat_name}}
+                </option>
+                <option value="">Please select</option>
+            </select>
+            <div *ngIf="cat.errors?.required && cat.touched" class="invalid-feedback">Task Category is required</div> 
+        </div>
+
+        <div class="form-group mt-1">
+            <textarea class="form-control form-control-sm" name="desc" #desc="ngModel" placeholder="Task Description" 
+              [(ngModel)]="task.desc" minlength="16" required cols="40" rows="4"
+              [ngClass]="{'is-invalid':desc.errors?.required && desc.touched || desc.errors?.minlength && desc.touched}"></textarea>
+            <div *ngIf="desc.errors?.required && desc.touched" class="invalid-feedback">Task Description is required</div>
+            <div *ngIf="desc.errors?.minlength && desc.touched" class="invalid-feedback">Must be at least 16 characters</div>        
+        </div>
+        <input type="submit" value="Create" class="btn btn-outline-primary btn-sm">
+      </form>
+  </div>
+   
+</div>

@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-md-6 pt-0">
+      <a routerLink="/" href="" class="btn btn-link pt-0">
+        <i class="fa fa-arrow-circle-o-left"></i> Back to Dashboard
+      </a>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+  
+<div class="card">
+  <div class="card-header px-3 py-2"><strong>Update Task</strong></div>
+
+  <div class="card-body px-3 py-1">
+      <form novalidate #taskForm="ngForm" (ngSubmit)="onSubmit(taskForm)">
+
+        <div class="form-group  my-0">
+          <label for="name" class="label py-1 mb-0">Name </label>
+          <input type="text" class="form-control form-control-sm py-1" name="name" #name="ngModel" 
+            [(ngModel)]="selectedTask.name" readonly>
+        </div>
+
+        <div class="form-group mt-1 mb-1">
+            <label for="cat" class="py-1 mb-0">Category</label> 
+            <select class="form-control form-control-sm rounded" #cat="ngModel" name="cat" [style.background-color]="selectedColor"
+                [(ngModel)]="selectedTask.cat" required 
+                [ngClass]="{'is-invalid':cat.errors?.required && cat.touched}" >
+                <option  class="py-1 text-white" *ngFor="let ctg of catList" [style.background-color]="ctg.color" value="{{ctg.cat_name}}">
+                  {{ctg.cat_name}}
+                </option>   
+            </select>
+            <div *ngIf="cat.errors?.required && cat.touched" class="invalid-feedback">Task Category is required</div> 
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="desc" class="py-1 mb-0">Description</label>
+            <textarea class="form-control form-control-sm py-1" name="desc" #desc="ngModel" placeholder="Task Description" 
+              [(ngModel)]="selectedTask.desc" minlength="16" required rows="3"
+              [ngClass]="{'is-invalid':desc.errors?.required && desc.touched || desc.errors?.minlength && desc.touched}"></textarea>
+            <div *ngIf="desc.errors?.required && desc.touched" class="invalid-feedback">Task Description is required</div>
+            <div *ngIf="desc.errors?.minlength && desc.touched" class="invalid-feedback">Must be at least 16 characters</div>        
+        </div>
+        <div class="progress pbar" *ngIf="selectedTask.progress> 0">
+          <div  class="progress-bar progress-bar-striped progress-bar-animated bg-success pbar" 
+              role="progressbar" [style.width.%]="selectedTask.progress"
+              aria-valuemin="0" aria-valuemax="100">{{selectedTask.progress}}% 
+          </div>
+      </div>
+        <div class="d-flex flex-row">
+          <div class="form-group ">
+              <label for="progress" class="px-1 py-1 mb-0">Progress</label>
+              <input type="number" class="form-control form-control-sm px-1 py-1" name="progress" #progress="ngModel" min="0" max="100" step="5"
+              [(ngModel)]="selectedTask.progress" >
+          </div>
+          <div class="form-group ml-auto mt-1 pt-4">
+             <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="completed" name="completed"
+                    #completed="ngModel" [(ngModel)]="selectedTask.completed">
+                <label class="form-check-label" for="exampleCheck1">Mark as complete</label>
+             </div>
+            </div>
+        </div>
+
+        <input type="submit" value="Update" class="btn btn-outline-primary btn-sm">
+      </form>
+    </div>
+    
+  </div>
