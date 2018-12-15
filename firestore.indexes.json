@@ -1,0 +1,22 @@
+{
+  "indexes": [
+    {
+      "collectionId": "tasks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "completed",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "cat",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "mode": "ASCENDING"
+        }
+      ]
+    }
+  ]
+}

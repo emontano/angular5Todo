@@ -14,6 +14,7 @@ import { Observable } from 'rxjs/Observable';
 export class TasksComponent implements OnInit {
 
   taskList: Task[];
+  p: Number = 1;
 
   constructor(private catService: CategoryService,
               private taskService: TaskService,

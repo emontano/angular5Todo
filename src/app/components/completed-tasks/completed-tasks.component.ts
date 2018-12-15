@@ -12,20 +12,20 @@ import { Task } from '../../models/Task';
 })
 export class CompletedTasksComponent implements OnInit {
   taskList: Task[];
+  p: Number = 1;
 
   constructor(private taskService: TaskService,
-              private catService: CategoryService) 
-              { }
+              private catService: CategoryService) { }
 
   ngOnInit() {
     this.taskService.getTasksCompleted().subscribe(tasks => {
-      this.taskList = tasks
+      this.taskList = tasks;
 
       this.catService.getCategories().subscribe(cats => {
-        tasks.forEach(task =>{
-          console.log("Category to find:" + task.cat)
+        tasks.forEach(task => {
+          console.log('Category to find:' + task.cat );
           cats.forEach(cat => {
-            if (cat.cat_name == task.cat) {
+            if (cat.cat_name === task.cat) {
                 task.color = cat.color;
                 return;
               }
